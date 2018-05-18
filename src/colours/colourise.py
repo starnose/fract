@@ -23,7 +23,7 @@ simple_transition_list = [colour_red, colour_green, colour_blue]
 bgr_list = [colour_blue, colour_green, colour_red]
 
 ship_list = [colour_mid_teal, colour_black, colour_orange, colour_red, colour_magenta, colour_purple]
-ship_list2 = [colour_black, colour_mid_teal, colour_white, colour_sky_blue, colour_purples, colour_red, colour_magenta, colour_dark_purple]
+ship_list2 = [colour_black, colour_mid_teal, colour_white, colour_sky_blue, colour_purple, colour_red, colour_magenta, colour_dark_purple]
 
 black_purple_list = [colour_black, colour_purple,
                      colour_black, colour_purple,
