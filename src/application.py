@@ -89,6 +89,9 @@ def tech_demo(processes: int):
     draw_fractal(MandelDropFactory(3, 500, 2), processes, 384, 216, [-2.5 + 2.25j, 5.5 - 2.25j],
                  ColourRangerWithExponentScaling(simple_transition_list, 0.25), './drop.png')
 
+    draw_fractal(MandelBarFactory(3, 500, 2), processes, 384, 216, [-4 + 2.25j, 4 - 2.25j],
+                 ColourRangerWithExponentScaling(many_transitions_list, 0.25), './mandelbar.png')
+
     draw_fractal(MandelDropFactory(3, 500, 3), processes, 384, 216, [-2.5 + 2.25j, 5.5 - 2.25j],
                  ColourRangerWithExponentScaling(simple_transition_list, 0.25), './drop3.png')
 

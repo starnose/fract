@@ -260,6 +260,11 @@ class MandelDropDrawer(PolarInverterDrawer, MandelbrotDrawer):
         return abs(self.total) <= self.escape or iters == 0
 
 
+class MandelBarDrawer(LogDrawer):
+    def apply_alg(self, total: complex, pointval: complex) -> complex:
+        return (total.conjugate() ** self.power) + pointval
+
+
 class LineDrawerFactory:
     def get_drawer(self, start: complex, end: complex, steps: int) -> LineDrawer:
         return LineDrawer(start, end, steps)
@@ -279,6 +284,11 @@ class MandelFactory(LineDrawerFactory):
 class MandelDropFactory(MandelFactory):
     def get_drawer(self, start: complex, end: complex, steps: int) -> LineDrawer:
         return MandelDropDrawer(start, end, steps, self.escapeval, self.iterations, self.power)
+
+
+class MandelBarFactory(MandelFactory):
+    def get_drawer(self, start: complex, end: complex, steps: int) -> LineDrawer:
+        return MandelBarDrawer(start, end, steps, self.escapeval, self.iterations, self.power)
 
 
 class ShipFactory(MandelFactory):
