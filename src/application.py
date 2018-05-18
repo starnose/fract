@@ -117,13 +117,13 @@ def tech_demo(processes: int):
     draw_fractal(ShipFactory(4, 5000, 2), processes, 384, 216, [-1.68 + 0.07125j, -1.58 - 0.02875j],
                  ColourRangerWithExponentScaling(ship_list, 0.25), './burning-ship.png')
 
-    newton_factory = NewtonFactory(500, 0.0001, 1.0 + 0.0j, simple_newton_function, simple_newton_derivative)
-    draw_fractal(newton_factory, processes, 384, 216, [-2.0 + 1.125j, 2.0 - 1.125j],
+    draw_fractal(NewtonFactory(500, 0.0001, 1.0 + 0.0j, simple_newton_function, simple_newton_derivative),
+                 processes, 384, 216, [-2.0 + 1.125j, 2.0 - 1.125j],
                  ColourRangerWithAbsBlack(bgr_list), './newt.png')
 
-    stalk_factory = NewtonStalkFactory(500, 0.0001, 1.0 + 0.0j, simple_newton_function, simple_newton_derivative)
-    draw_fractal(stalk_factory, processes, 384, 216, [-2.0 + 1.125j, 2.0 - 1.125j],
-                 ColourRangerWithAbsBlack(many_transitions_list), './stalk.png')
+    draw_fractal(NewtonStalkFactory(500, 0.0001, 1.0 + 0.0j, simple_newton_function, simple_newton_derivative),
+                 processes, 384, 216, [-2.0 + 1.125j, 2.0 - 1.125j],
+                 ColourRangerWithAbsBlack(ship_list2), './stalk.png')
 
 
 def main():
