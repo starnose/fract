@@ -78,51 +78,54 @@ def simple_newton_derivative(x: complex) -> complex:
     return 2*(x**2)
 
 
-def tech_demo(processes: int):
+def tech_demo(processes: int, xres: int, yres: int):
 
-    draw_fractal(MandelFactory(3, 500, 2), processes, 384, 216, [-2.5 + 1.125j, 1.5 - 1.125j],
+    # The regions/windows onto all the fractals below are 16:9, so the resolutions
+    # probably should be too
+
+    draw_fractal(MandelFactory(3, 500, 2), processes, xres, yres, [-2.5 + 1.125j, 1.5 - 1.125j],
                  ColourRangerWithExponentScaling(many_transitions_list, 0.25), './mandel.png')
 
-    draw_fractal(MandelFactory(10, 1000, -2), processes, 384, 216, [-2.5 + 1.125j, 1.5 - 1.125j],
+    draw_fractal(MandelFactory(10, 1000, -2), processes, xres, yres, [-2.5 + 1.125j, 1.5 - 1.125j],
                  ColourRangerWithAbsBlack(many_transitions_list), './negative.png')
 
-    draw_fractal(MandelDropFactory(3, 500, 2), processes, 384, 216, [-2.5 + 2.25j, 5.5 - 2.25j],
-                 ColourRangerWithExponentScaling(simple_transition_list, 0.25), './drop.png')
-
-    draw_fractal(MandelBarFactory(3, 500, 2), processes, 384, 216, [-4 + 2.25j, 4 - 2.25j],
+    draw_fractal(MandelBarFactory(3, 500, 2), processes, xres, yres, [-4 + 2.25j, 4 - 2.25j],
                  ColourRangerWithExponentScaling(many_transitions_list, 0.25), './mandelbar.png')
 
-    draw_fractal(MandelDropFactory(3, 500, 3), processes, 384, 216, [-2.5 + 2.25j, 5.5 - 2.25j],
+    draw_fractal(MandelDropFactory(3, 500, 2), processes, xres, yres, [-2.5 + 2.25j, 5.5 - 2.25j],
+                 ColourRangerWithExponentScaling(simple_transition_list, 0.25), './drop.png')
+
+    draw_fractal(MandelDropFactory(3, 500, 3), processes, xres, yres, [-4 + 2.25j, 4 - 2.25j],
                  ColourRangerWithExponentScaling(simple_transition_list, 0.25), './drop3.png')
 
-    draw_fractal(MandelDropFactory(3, 500, 4), processes, 384, 216, [-2.5 + 2.25j, 5.5 - 2.25j],
+    draw_fractal(MandelDropFactory(3, 500, 4), processes, xres, yres, [-4 + 2.25j, 4 - 2.25j],
                  ColourRangerWithExponentScaling(simple_transition_list, 0.25), './drop4.png')
 
-    draw_fractal(JuliaFactory(4, 5000, 3, 0.4 + 0.002275j), processes, 384, 216, [-2.0 + 1.125j, 2.0 - 1.125j],
+    draw_fractal(JuliaFactory(4, 5000, 3, 0.4 + 0.002275j), processes, xres, yres, [-2.0 + 1.125j, 2.0 - 1.125j],
                  ColourRangerWithAbsBlack(many_transitions_list), './julia3.png')
 
-    draw_fractal(JuliaFactory(4, 5000, 4, 0.559 - 0.0481j), processes, 384, 216, [-2.0 + 1.125j, 2.0 - 1.125j],
+    draw_fractal(JuliaFactory(4, 5000, 4, 0.559 - 0.0481j), processes, xres, yres, [-2.0 + 1.125j, 2.0 - 1.125j],
                  ColourRangerWithAbsBlack(many_transitions_list), './julia4.png')
 
-    draw_fractal(JuliaFactory(4, 5000, 6, 0.736 - 0.417355j), processes, 384, 216, [-2.0 + 1.125j, 2.0 - 1.125j],
+    draw_fractal(JuliaFactory(4, 5000, 6, 0.736 - 0.417355j), processes, xres, yres, [-2.0 + 1.125j, 2.0 - 1.125j],
                  ColourRangerWithAbsBlack(many_transitions_list), './julia6.png')
 
-    draw_fractal(JuliaFactory(4, 5000, -2, 0.653125 + 0.510337j), processes, 384, 216, [-2.0 + 1.125j, 2.0 - 1.125j],
+    draw_fractal(JuliaFactory(4, 5000, -2, 0.653125 + 0.510337j), processes, xres, yres, [-2.0 + 1.125j, 2.0 - 1.125j],
                  ColourRangerWithAbsBlack(many_transitions_list), './julia-negative.png')
 
-    draw_fractal(JuliaFactory(4, 5000, 1.5, -0.1948 + 0j),
-                 processes, 216, 384, [-0.6947218749999999 + 0.28875000000000006j, -0.369878125 - 0.28875000000000006j],
+    draw_fractal(JuliaFactory(4, 5000, 1.5, -0.1948 + 0j), processes,
+                 yres, xres, [-0.6947218749999999 + 0.28875000000000006j, -0.369878125 - 0.28875000000000006j],
                  ColourRangerWithAbsBlack(many_transitions_list), './glynn-tree.png')
 
-    draw_fractal(ShipFactory(4, 5000, 2), processes, 384, 216, [-1.68 + 0.07125j, -1.58 - 0.02875j],
+    draw_fractal(ShipFactory(4, 5000, 2), processes, xres, yres, [-1.68 + 0.07125j, -1.58 - 0.02875j],
                  ColourRangerWithExponentScaling(ship_list, 0.25), './burning-ship.png')
 
     draw_fractal(NewtonFactory(500, 0.0001, 1.0 + 0.0j, simple_newton_function, simple_newton_derivative),
-                 processes, 384, 216, [-2.0 + 1.125j, 2.0 - 1.125j],
+                 processes, xres, yres, [-2.0 + 1.125j, 2.0 - 1.125j],
                  ColourRangerWithAbsBlack(bgr_list), './newt.png')
 
     draw_fractal(NewtonStalkFactory(500, 0.0001, 1.0 + 0.0j, simple_newton_function, simple_newton_derivative),
-                 processes, 384, 216, [-2.0 + 1.125j, 2.0 - 1.125j],
+                 processes, xres, yres, [-2.0 + 1.125j, 2.0 - 1.125j],
                  ColourRangerWithAbsBlack(ship_list2), './stalk.png')
 
 
@@ -134,7 +137,7 @@ def main():
     else:
         print('Using {} processes'.format(processes))
 
-    tech_demo(processes)
+    tech_demo(processes, 384, 216)
 
 
 if __name__ == "__main__":
