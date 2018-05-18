@@ -131,10 +131,7 @@ def main():
     else:
         print('Using {} processes'.format(processes))
 
-    draw_fractal(ShipFactory(4, 500, 2.0), processes, 384, 216, [-1.68 + 0.07125j, -1.58 - 0.02875j],
-                 ColourRangerWithExponentScaling(ship_list2, 0.25), './burning-ship.png')
-
-    # tech_demo(processes)
+    tech_demo(processes)
 
 
 if __name__ == "__main__":
