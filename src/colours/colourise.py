@@ -8,7 +8,7 @@ colour_blue = (0, 0, 255)
 colour_black = (0, 0, 0)
 colour_white = (255, 255, 255)
 colour_magenta = (255, 0, 255)
-colour_yellow = (0, 255, 255)
+colour_yellow = (255, 255, 0)
 colour_mid_grey = (127, 127, 127)
 colour_dark_purple = (35, 16, 81)
 colour_mid_teal = (66, 148, 155)
@@ -16,13 +16,14 @@ colour_orange = (255, 134, 5)
 colour_lime_green = (200, 255, 5)
 colour_sky_blue = (100, 233, 255)
 colour_purple = (135, 32, 232)
+colour_lilac = (230, 200, 255)
 
 simple_transition_list = [colour_red, colour_green, colour_blue]
 
 bgr_list = [colour_blue, colour_green, colour_red]
 
 ship_list = [colour_mid_teal, colour_black, colour_orange, colour_red, colour_magenta, colour_purple]
-ship_list2 = [colour_black, colour_mid_teal, colour_white, colour_orange, colour_purple, colour_red, colour_magenta, colour_dark_purple]
+ship_list2 = [colour_black, colour_mid_teal, colour_white, colour_sky_blue, colour_purples, colour_red, colour_magenta, colour_dark_purple]
 
 black_purple_list = [colour_black, colour_purple,
                      colour_black, colour_purple,
