@@ -89,23 +89,30 @@ class IterativeDrawer(LineDrawer):
         return 0 + 0j
 
 
-class LogDrawer(IterativeDrawer):
-
-    """
-    Instead of just returning the iterations, calculate a smooth mu
-    """
-
+class PowerAndEscapeDrawer(IterativeDrawer):
     def __init__(self,
                  start_point: complex,
                  end_point: complex,
                  steps: int,
-                 escape: float,
                  iterations: int,
-                 power: complex):
-
-        super(LogDrawer, self).__init__(start_point, end_point, steps, iterations)
+                 power: complex,
+                 escape: float):
+        super(PowerAndEscapeDrawer, self).__init__(start_point, end_point, steps, iterations)
         self.escape = escape
         self.power = power
+
+    def apply_condition(self, iters: int) -> bool:
+        return abs(self.total) <= self.escape
+
+    def init_point(self, point_val: complex):
+        self.total = point_val
+
+
+class LogDrawer(PowerAndEscapeDrawer):
+
+    """
+    Instead of just returning the iterations, calculate a smooth mu
+    """
 
     def calc_returnval(self, iterations: float, point_val: complex) -> float:
         n = super(LogDrawer, self).calc_returnval(iterations, point_val)
@@ -113,12 +120,6 @@ class LogDrawer(IterativeDrawer):
             return 0.0
         mu = (n + 1) - (log10(log10(abs(self.total))) / log10(self.power))
         return abs(mu)
-
-    def apply_condition(self, iters: int) -> bool:
-        return abs(self.total) <= self.escape
-
-    def init_point(self, point_val: complex):
-        self.total = point_val
 
 
 class PolarInverterDrawer(LineDrawer):
@@ -162,15 +163,12 @@ class JuliaDrawer(LogDrawer):
                  start_point: complex,
                  end_point: complex,
                  steps: int,
-                 escape: float,
                  iterations: int,
                  power: complex,
+                 escape: float,
                  constant: complex):
-        super(JuliaDrawer, self).__init__(start_point, end_point, steps, escape, iterations, power)
+        super(JuliaDrawer, self).__init__(start_point, end_point, steps, iterations, power, escape)
         self.constant = constant
-
-    def init_point(self, point_val: complex):
-        self.total = point_val
 
     def apply_alg(self, total: complex, pointval: complex) -> complex:
         return (total ** self.power) + self.constant
@@ -196,14 +194,14 @@ class NewtonDrawer(IterativeDrawer):
                  iterations: int,
                  tolerance: float,
                  constant: complex,
-                 mainfunction: Callable[[complex], complex],
+                 main_function: Callable[[complex], complex],
                  derivative: Callable[[complex], complex]):
 
         super(NewtonDrawer, self).__init__(start_point, end_point, steps, iterations)
         self.tolerance = tolerance
         self.constant = constant
         self.last_value = 100000.0 + 0.0j
-        self.function = mainfunction
+        self.function = main_function
         self.derivative = derivative
 
     def init_point(self, point_val: complex):
@@ -230,14 +228,14 @@ class NewtonStalkDrawer(LogDrawer):
                  iterations: int,
                  tolerance: float,
                  constant: complex,
-                 mainfunction: Callable[[complex], complex],
+                 main_function: Callable[[complex], complex],
                  derivative: Callable[[complex], complex]):
 
-        super(NewtonStalkDrawer, self).__init__(start_point, end_point, steps, 0, iterations, 3)
+        super(NewtonStalkDrawer, self).__init__(start_point, end_point, steps, iterations, 3, 0)
         self.tolerance = tolerance
         self.constant = constant
         self.last_value = 100000.0 + 0.0j
-        self.function = mainfunction
+        self.function = main_function
         self.derivative = derivative
 
     def init_point(self, point_val: complex):
@@ -265,6 +263,21 @@ class MandelBarDrawer(LogDrawer):
         return (total.conjugate() ** self.power) + pointval
 
 
+class PickoverDrawer(JuliaDrawer):
+
+    def apply_condition(self, iters: int) -> bool:
+        return abs(self.total.imag) <= self.escape and abs(self.total.real) <= self.escape
+
+    def calc_returnval(self, iterations: float, point_val: complex) -> float:
+        if iterations == self.iterations:
+            return 0.0
+        else:
+            return abs(self.total.imag)
+
+    def apply_alg(self, total: complex, pointval: complex):
+        return (total ** self.power) + self.constant
+
+
 class LineDrawerFactory:
     def get_drawer(self, start: complex, end: complex, steps: int) -> LineDrawer:
         return LineDrawer(start, end, steps)
@@ -278,22 +291,22 @@ class MandelFactory(LineDrawerFactory):
         self.power = power
 
     def get_drawer(self, start: complex, end: complex, steps: int) -> LineDrawer:
-        return SafeMandelbrotDrawer(start, end, steps, self.escapeval, self.iterations, self.power)
+        return SafeMandelbrotDrawer(start, end, steps, self.iterations, self.power, self.escapeval)
 
 
 class MandelDropFactory(MandelFactory):
     def get_drawer(self, start: complex, end: complex, steps: int) -> LineDrawer:
-        return MandelDropDrawer(start, end, steps, self.escapeval, self.iterations, self.power)
+        return MandelDropDrawer(start, end, steps, self.iterations, self.power, self.escapeval)
 
 
 class MandelBarFactory(MandelFactory):
     def get_drawer(self, start: complex, end: complex, steps: int) -> LineDrawer:
-        return MandelBarDrawer(start, end, steps, self.escapeval, self.iterations, self.power)
+        return MandelBarDrawer(start, end, steps, self.iterations, self.power, self.escapeval)
 
 
 class ShipFactory(MandelFactory):
     def get_drawer(self, start: complex, end: complex, steps: int) -> LineDrawer:
-        return ShipDrawer(start, end, steps, self.escapeval, self.iterations, self.power)
+        return ShipDrawer(start, end, steps, self.iterations, self.power, self.escapeval)
 
 
 class JuliaFactory(MandelFactory):
@@ -302,7 +315,7 @@ class JuliaFactory(MandelFactory):
         self.constant = constant
 
     def get_drawer(self, start: complex, end: complex, steps: int) -> LineDrawer:
-        return JuliaDrawer(start, end, steps, self.escapeval, self.iterations, self.power, self.constant)
+        return JuliaDrawer(start, end, steps, self.iterations, self.power, self.escapeval, self.constant)
 
 
 class NewtonFactory(LineDrawerFactory):
@@ -340,3 +353,8 @@ class NewtonStalkFactory(NewtonFactory):
                                  self.constant,
                                  self.function,
                                  self.derivative)
+
+
+class PickoverFactory(JuliaFactory):
+    def get_drawer(self, start: complex, end: complex, steps: int) -> LineDrawer:
+        return PickoverDrawer(start, end, steps, self.iterations, self.power, self.escapeval, self.constant)

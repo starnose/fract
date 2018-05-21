@@ -128,6 +128,8 @@ def tech_demo(processes: int, xres: int, yres: int):
                  processes, xres, yres, [-2.0 + 1.125j, 2.0 - 1.125j],
                  ColourRangerWithAbsBlack(ship_list2), './stalk.png')
 
+    draw_fractal(PickoverFactory(3, 500, 3, -1 + 1j), processes, xres, yres, [-4 + 2.25j, 4 - 2.25j],
+                 ColourRangerWithExponentScaling(bgr_list, 0.5), './mandel.png')
 
 def main():
     processes = cpu_count()
@@ -138,6 +140,8 @@ def main():
         print('Using {} processes'.format(processes))
 
     tech_demo(processes, 384, 216)
+
+
 
 
 if __name__ == "__main__":
