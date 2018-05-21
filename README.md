@@ -18,10 +18,10 @@ Newton fractals use raw z-value output, though when the log shading is applied t
 This is coupled with a colour-range system that interpolates between arbitrary colour sequences and can scale colour output (currently fractional exponent scaling is good).
 
 Future work:
-Pickover Biomorphs
-Phoenix fractals
-Log colour scaling
-Orbital-Trap style colouring
+* Pickover Biomorphs
+* Phoenix fractals
+* Log colour scaling
+* Orbital-Trap style colouring
 
 Far future work:
-Ray marching and mandelbulbs. Maybe.
+* Ray marching and mandelbulbs. Maybe.
