@@ -57,8 +57,9 @@ def draw_fractal(factory: LineDrawerFactory,
     all_drawers = [factory.get_drawer(x, region[1].real + x.imag * 1j, width) for x in vertical.get_points()]
 
     print('Drawing Starting....')
-    p = Pool(cpus)
-    final_grid = p.map(proc_draw, all_drawers)
+    pool = Pool(cpus)
+    final_grid = pool.map(proc_draw, all_drawers)
+    pool.close()
     print('Drawing complete')
     print('Output Starting....')
     writer = png_output.PngWriter(filename, width, height)
@@ -129,7 +130,7 @@ def tech_demo(processes: int, xres: int, yres: int):
                  ColourRangerWithAbsBlack(ship_list2), './stalk.png')
 
     draw_fractal(PickoverFactory(3, 500, 3, -1 + 1j), processes, xres, yres, [-4 + 2.25j, 4 - 2.25j],
-                 ColourRangerWithExponentScaling(bgr_list, 0.5), './mandel.png')
+                 ColourRangerWithExponentScaling(bgr_list, 0.5), './pickover.png')
 
 def main():
     processes = cpu_count()

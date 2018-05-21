@@ -118,7 +118,9 @@ class Colouriser:
         return [x for point in data for x in self.range.get_colour(point, self.total_max)]
 
     def colourise(self, raw_data: List[List[float]]) -> List[List[int]]:
-        p = Pool(self.processors)
-        self.total_max = max(p.map(colourise_max_worker, raw_data)) * fudge_factor
+        pool = Pool(self.processors)
+        self.total_max = max(pool.map(colourise_max_worker, raw_data)) * fudge_factor
         # print('total max - {}'.format(self.total_max))
-        return p.map(self.colourise_worker, raw_data)
+        results = pool.map(self.colourise_worker, raw_data)
+        pool.close()
+        return results

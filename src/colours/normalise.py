@@ -34,12 +34,13 @@ class Normaliser:
 
     def normalise_nest_no_flatten(self, points: List[List[float]], processes: int) -> List[List[int]]:
         # print('Normalising data - {}'.format(points))
-        p = Pool(processes)
+        pool = Pool(processes)
         # self.total_max = max([max(row) for row in points])
         self.total_max = max(p.map(normalise_max_worker, points))
         print('Max found - {}'.format(self.total_max))
 
         # output = [self.normalise_worker(total_max, row) for row in points]
-        output = p.map(self.normalise_worker, points)
+        output = pool.map(self.normalise_worker, points)
+        pool.close()
         # print('Normalised data - {}'.format(output))
         return output
