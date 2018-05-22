@@ -153,32 +153,13 @@ class SafeMandelbrotDrawer(MandelbrotDrawer):
         return super(SafeMandelbrotDrawer, self).calculate_point(point_val)
 
 
-class JuliaDrawer(LogDrawer):
-
-    """
-    A Julia drawer
-    """
-
-    def __init__(self,
-                 start_point: complex,
-                 end_point: complex,
-                 steps: int,
-                 iterations: int,
-                 power: complex,
-                 escape: float,
-                 constant: complex):
-        super(JuliaDrawer, self).__init__(start_point, end_point, steps, iterations, power, escape)
-        self.constant = constant
-
-    def apply_alg(self, total: complex, pointval: complex) -> complex:
-        return (total ** self.power) + self.constant
-
-
 class ShipDrawer(LogDrawer):
 
     """
     A burning ship drawer
     """
+
+    # Flip the image upside down before starting
     def map_points(self):
         self.points = [x.real + (x.imag * -1.0j) for x in self.points]
 
@@ -258,13 +239,23 @@ class MandelDropDrawer(PolarInverterDrawer, MandelbrotDrawer):
         return abs(self.total) <= self.escape or iters == 0
 
 
-class MandelBarDrawer(LogDrawer):
-    def apply_alg(self, total: complex, pointval: complex) -> complex:
-        return (total.conjugate() ** self.power) + pointval
+class MandelLambdaDrawer(SafeMandelbrotDrawer):
+    def __init__(self,
+                 start: complex,
+                 end: complex,
+                 steps: int,
+                 iterations: int,
+                 power: complex,
+                 escape: float,
+                 main_function: Callable[[complex, complex], complex]):
+        super(MandelLambdaDrawer, self).__init__(start, end, steps, iterations, power, escape)
+        self.function = main_function
+
+    def apply_alg(self, total: complex, pointval: complex):
+        return self.function(total, pointval)
 
 
-class PickoverDrawer(JuliaDrawer):
-
+class PickoverDrawer(MandelLambdaDrawer):
     def apply_condition(self, iters: int) -> bool:
         return abs(self.total.imag) <= self.escape and abs(self.total.real) <= self.escape
 
@@ -274,16 +265,12 @@ class PickoverDrawer(JuliaDrawer):
         else:
             return abs(self.total.imag)
 
-    def apply_alg(self, total: complex, pointval: complex):
-        return (total ** self.power) + self.constant
 
-
-class LineDrawerFactory:
+class LineFactory():
     def get_drawer(self, start: complex, end: complex, steps: int) -> LineDrawer:
-        return LineDrawer(start, end, steps)
+        pass
 
-
-class MandelFactory(LineDrawerFactory):
+class MandelFactory(LineFactory):
     def __init__(self, escape: float, iterations: int, power: complex):
         super(MandelFactory, self).__init__()
         self.escapeval = escape
@@ -299,26 +286,12 @@ class MandelDropFactory(MandelFactory):
         return MandelDropDrawer(start, end, steps, self.iterations, self.power, self.escapeval)
 
 
-class MandelBarFactory(MandelFactory):
-    def get_drawer(self, start: complex, end: complex, steps: int) -> LineDrawer:
-        return MandelBarDrawer(start, end, steps, self.iterations, self.power, self.escapeval)
-
-
 class ShipFactory(MandelFactory):
     def get_drawer(self, start: complex, end: complex, steps: int) -> LineDrawer:
         return ShipDrawer(start, end, steps, self.iterations, self.power, self.escapeval)
 
 
-class JuliaFactory(MandelFactory):
-    def __init__(self, escape: float, iterations: int, power: complex, constant: complex):
-        super(JuliaFactory, self).__init__(escape, iterations, power)
-        self.constant = constant
-
-    def get_drawer(self, start: complex, end: complex, steps: int) -> LineDrawer:
-        return JuliaDrawer(start, end, steps, self.iterations, self.power, self.escapeval, self.constant)
-
-
-class NewtonFactory(LineDrawerFactory):
+class NewtonFactory(LineFactory):
     def __init__(self,
                  iterations: int,
                  tolerance: float,
@@ -355,6 +328,19 @@ class NewtonStalkFactory(NewtonFactory):
                                  self.derivative)
 
 
-class PickoverFactory(JuliaFactory):
+class MandelLambdaFactory(MandelFactory):
+    def __init__(self,
+                 escape: float,
+                 iterations: int,
+                 power: complex,
+                 main_function: Callable[[complex, complex], complex]):
+        super(MandelLambdaFactory, self).__init__(escape, iterations, power)
+        self.function = main_function
+
+    def get_drawer(self, start: complex, end: complex, steps: int):
+        return MandelLambdaDrawer(start, end, steps, self.iterations, self.power, self.escapeval, self.function)
+
+
+class PickoverFactory(MandelLambdaFactory):
     def get_drawer(self, start: complex, end: complex, steps: int) -> LineDrawer:
-        return PickoverDrawer(start, end, steps, self.iterations, self.power, self.escapeval, self.constant)
+        return PickoverDrawer(start, end, steps, self.iterations, self.power, self.escapeval, self.function)
