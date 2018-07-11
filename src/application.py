@@ -1,4 +1,4 @@
-from calculators.linedrawer import *
+from calculators.factories import *
 from output import png_output
 from colours import normalise
 from colours.colourise import *
@@ -141,6 +141,10 @@ def tech_demo(processes: int, xres: int, yres: int):
     draw_fractal(PickoverFactory(3, 500, 3, lambda z, c: (z**3) + -1 + 1j),
                  processes, xres, yres, [-4 + 2.25j, 4 - 2.25j],
                  ColourRangerWithExponentScaling(bgr_list, 0.5), './pickover.png')
+
+    draw_fractal(PickoverFactory2(10, 500, 5, lambda z, c: (z**5) + 1 + 1j),
+                 processes, xres, yres, [-3.0 + 1.6875j, 3.0 - 1.6875j],
+                 ColourRangerWithExponentScaling(many_transitions_list, 0.5), './pickover2.png')
 
 
 def main():

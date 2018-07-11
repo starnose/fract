@@ -9,6 +9,7 @@ This program can currently draw, at arbitrary resolution and zoom -
 * Burning ship fractals
 * Newton fractals 
 * Mandelbar sets
+* Pickover Biomorphs
 
 These can be output as greyscale or colour. For colour, various colouring strategies are available. 
 
@@ -18,7 +19,6 @@ Newton fractals use raw z-value output, though when the log shading is applied t
 This is coupled with a colour-range system that interpolates between arbitrary colour sequences and can scale colour output (currently fractional exponent scaling is good).
 
 Future work:
-* Pickover Biomorphs
 * Phoenix fractals
 * Log colour scaling
 * Orbital-Trap style colouring

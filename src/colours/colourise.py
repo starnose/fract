@@ -38,6 +38,8 @@ many_transitions_list = [colour_purple, colour_green,
                          colour_mid_teal, colour_dark_purple,
                          colour_sky_blue, colour_mid_grey]
 
+pickover_list = [colour_black, colour_purple, colour_white]
+
 # The highest point will equal the max point otherwise, fudge by 0.1%
 fudge_factor = 1.001
 
