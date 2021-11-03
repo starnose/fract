@@ -18,7 +18,7 @@ class PngWriter:
         image_writer.write(self.image_file, data_points)
 
     def add_colour(self, data_points: List[List[int]]):
-        image_writer = png.Writer(width=self.width, height=self.height)
+        image_writer = png.Writer(width=self.width, height=self.height, greyscale=False)
         image_writer.write(self.image_file, data_points)
 
     def close(self):

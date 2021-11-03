@@ -132,7 +132,7 @@ def tech_demo(processes: int, xres: int, yres: int):
                  processes, xres, yres, [-2.0 + 1.125j, 2.0 - 1.125j],
                  ColourRangerWithExponentScaling(bgr_list, 1.0), './newt.png')
 
-    # For... reasons, this gives us interesting stalks, but cannot be run with its real dericative
+    # For... reasons, this gives us interesting stalks, but cannot be run with its real derivative
     draw_fractal(NewtonStalkFactory(500, 0.0001, 1.0 + 0.0j, lambda z: (z**3) - 1, lambda z: 2*(z**2)),
                  processes, xres, yres, [-2.0 + 1.125j, 2.0 - 1.125j],
                  ColourRangerWithExponentScaling(ship_list2, 1.0), './stalk.png')
